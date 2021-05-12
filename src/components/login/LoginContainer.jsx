@@ -1,0 +1,133 @@
+import React, {useState} from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import {Link, useHistory} from 'react-router-dom';
+import axios from 'axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {logIn} from '../../redux/actions/logInActions';
+
+
+const {
+    REACT_APP_BACKEND_URL,
+} = process.env;
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+      marginTop: theme.spacing(8),
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+      width: '100%', // Fix IE 11 issue.
+      marginTop: theme.spacing(1),
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2),
+    },
+  }));
+
+
+const LoginContainer =() => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const history = useHistory();
+    const logInState = useSelector(state => state.logIn);
+    const dispatch = useDispatch();
+    const {
+        logged,
+        accessToken
+    } = logInState;
+    const login = () => {
+        if(!logged){
+            axios.post(`${REACT_APP_BACKEND_URL}/auth/login`, {
+                username: username,
+                password: password
+            }).then(({data}) => {
+                console.log(data)
+                dispatch(logIn(data))
+                history.push('/')
+
+            })
+        }
+    }
+    const classes = useStyles();
+    return (
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+                Sign in
+            </Typography>
+            <form className={classes.form} noValidate>
+                <TextField
+                    onChange={(e)=>{setUsername(e.target.value)}}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Username"
+                    name="username"
+                    autoFocus
+                />
+                
+                <TextField
+                    onChange={(e)=>{setPassword(e.target.value)}}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                />
+                <FormControlLabel
+                    control={<Checkbox value="remember" color="primary" />}
+                    label="Remember me"
+                />
+                <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={()=>{login()}}
+                >
+                Sign In
+                </Button>
+                <Grid container>
+                <Grid item xs>
+                    <Link href="#" variant="body2">
+                    Forgot password?
+                    </Link>
+                </Grid>
+                <Grid item>
+                    <Link to={'/register'}>
+                    Don't have an account? Sign Up
+                    </Link>
+                </Grid>
+                </Grid>
+            </form>
+            </div>
+      </Container>
+    )
+}
+export default LoginContainer;

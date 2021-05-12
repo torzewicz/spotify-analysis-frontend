@@ -4,7 +4,8 @@ import {Route, Switch} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core';
 import SwitchComponent from '../components/analysis/switch/SwitchComponent';
 import WelcomeContainer from '../components/welcome/WelcomeContainer';
-
+import LoginContainer from '../components/login/LoginContainer';
+import RegisterContainer from '../components/login/RegisterContainer';
 const MainNavigation = () => {
     const classes = useStyles();
 
@@ -14,12 +15,11 @@ const MainNavigation = () => {
             <Switch>
 
                 <Route path='/login'>
-                    {/*<SignInFormContainer/>*/}
-                    <div>
-                        logowanko
-                    </div>
+                    <LoginContainer></LoginContainer>
                 </Route>
-
+                <Route path='/register'>
+                    <RegisterContainer></RegisterContainer>
+                </Route>
                 <Route path={'/analysis'}>
                     <SwitchComponent/>
                 </Route>
