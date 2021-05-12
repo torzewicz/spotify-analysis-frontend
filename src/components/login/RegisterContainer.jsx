@@ -11,6 +11,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import axios from 'axios';
+
+const {
+    REACT_APP_BACKEND_URL,
+} = process.env;
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -40,6 +45,15 @@ const RegisterContainer =() => {
     const [password, setPassword] = useState('');
     const [repeatedPassword, setRepeatedPassword] = useState('');
     
+    const register = () => {
+        axios.post(`${REACT_APP_BACKEND_URL}/auth/signup`, {
+            email: email,
+            password: password,
+            username: username
+        }).then(data=>{
+            console.log(data);
+        })
+    }
     const classes = useStyles();
     return (
         <Container component="main" maxWidth="xs">
@@ -103,8 +117,8 @@ const RegisterContainer =() => {
                     label="Remember me"
                 />
                 <Button
-                    type="submit"
                     fullWidth
+                    onClick={()=>{register()}}
                     variant="contained"
                     color="primary"
                     className={classes.submit}

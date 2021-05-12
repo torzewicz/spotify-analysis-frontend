@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import {useLocation, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn} from '../../redux/actions/logInActions';
+import {logIn, connectedToSpotify} from '../../redux/actions/logInActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TrackComponent from '../analysis/tracks/TrackComponent';
 
@@ -30,36 +30,46 @@ const WelcomeContainer = () => {
         accessToken
     } = logInState;
 
-    useEffect(() => {
-        if (!!query.get('code') && !logged) {
-            setLoading(true);
-            axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth/connect`, {
-                params: {
-                    code: query.get('code')
-                }
-            })
-                .then(({data}) => {
-                    dispatch(logIn(data));
-                    history.push('/')
+    // useEffect(() => {
+    //     if (!!query.get('code') && !logged) {
+    //         setLoading(true);
+    //         axios.get(`${process.env.REACT_APP_BACKEND_URL}/auth/connect`, {
+    //             params: {
+    //                 code: query.get('code')
+    //             }
+    //         })
+    //             .then(({data}) => {
+    //                 dispatch(logIn(data));
+    //                 history.push('/')
 
-                })
-        }
-    }, [query.get('code')]);
+    //             })
+    //     }
+    // }, [query.get('code')]);
 
     const fetchCurrentTrack = () => {
         setInterval(() => {
             if (accessToken) {
-                axios.get(`${REACT_APP_BACKEND_URL}/user/current`, {
-                    params: {
-                        token: accessToken,
-                    }
-                })
-                    .then(({data}) => {
-                        setCurrentPlaying(data);
+                console.log(accessToken)
+                // axios.get(`${REACT_APP_BACKEND_URL}/spotifyuser/current`, {
+                //     headers: {
+                //         Authorization: `Bearer ${accessToken}`,
+                //     }
+                // })
+                //     .then(({data}) => {
+                //         setCurrentPlaying(data);
+                //     })
+                //     .catch(e => {
+                //         console.log(e)
+                //     });
+                    axios.get(`${REACT_APP_BACKEND_URL}/user`, {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        }
                     })
-                    .catch(e => {
-                        console.log(e)
-                    });
+                        .then(({data}) => {
+                            console.log(data);
+                            dispatch(connectedToSpotify(data));
+                        })
             }
         }, 1000);
     };

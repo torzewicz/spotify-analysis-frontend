@@ -1,8 +1,9 @@
-import {LOG_IN} from '../actions/types';
+import {LOG_IN, CONNECTED_TO_SPOTIFY} from '../actions/types';
 
 const initialState = {
     logged: false,
     accessToken: undefined,
+    connectedToSpotify: false
 };
 
 const logInReducer = (state = initialState, action) => {
@@ -11,8 +12,14 @@ const logInReducer = (state = initialState, action) => {
             return {
                 ...state,
                 logged: true,
-                accessToken: action.payload.access_token
+                accessToken: action.payload.token
             };
+        case CONNECTED_TO_SPOTIFY: {
+            return {
+                ...state,
+                connectedToSpotify: action.payload.connectedToSpotify
+            }
+        }
         default:
             return state;
     }

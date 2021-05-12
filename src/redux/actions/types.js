@@ -3,4 +3,5 @@ export const SIDEBAR_CLOSED = 'SIDEBAR_CLOSED';
 export const SIDEBAR_TOGGLED = 'SIDEBAR_TOGGLED';
 
 export const LOG_IN = 'LOG_IN';
+export const CONNECTED_TO_SPOTIFY = 'CONNECTED_TO_SPOTIFY';
 

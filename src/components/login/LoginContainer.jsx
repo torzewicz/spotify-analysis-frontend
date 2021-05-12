@@ -10,8 +10,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import axios from 'axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {logIn} from '../../redux/actions/logInActions';
+
 
 const {
     REACT_APP_BACKEND_URL,
@@ -37,11 +40,30 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-  
+
 const LoginContainer =() => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    
+    const history = useHistory();
+    const logInState = useSelector(state => state.logIn);
+    const dispatch = useDispatch();
+    const {
+        logged,
+        accessToken
+    } = logInState;
+    const login = () => {
+        if(!logged){
+            axios.post(`${REACT_APP_BACKEND_URL}/auth/login`, {
+                username: username,
+                password: password
+            }).then(({data}) => {
+                console.log(data)
+                dispatch(logIn(data))
+                history.push('/')
+
+            })
+        }
+    }
     const classes = useStyles();
     return (
         <Container component="main" maxWidth="xs">
@@ -87,6 +109,7 @@ const LoginContainer =() => {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    onClick={()=>{login()}}
                 >
                 Sign In
                 </Button>
