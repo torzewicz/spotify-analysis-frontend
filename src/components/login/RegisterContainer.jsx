@@ -73,7 +73,6 @@ const RegisterContainer =() => {
                     id="username"
                     label="Username"
                     name="username"
-                    autoFocus
                 />
                 <TextField
                     onChange={(e)=>{setPassword(e.target.value)}}
