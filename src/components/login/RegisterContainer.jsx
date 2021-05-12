@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const RegisterContainer =() => {
 
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [repeatedPassword, setRepeatedPassword] = useState('');
     
@@ -61,6 +62,17 @@ const RegisterContainer =() => {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    autoFocus
+                />
+                 <TextField
+                    onChange={(e)=>{setUsername(e.target.value)}}
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="username"
                     autoFocus
                 />
                 <TextField

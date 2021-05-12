@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
   
 const LoginContainer =() => {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     
     const classes = useStyles();
@@ -55,17 +55,17 @@ const LoginContainer =() => {
             </Typography>
             <form className={classes.form} noValidate>
                 <TextField
-                    onChange={(e)=>{setEmail(e.target.value)}}
+                    onChange={(e)=>{setUsername(e.target.value)}}
                     variant="outlined"
                     margin="normal"
                     required
                     fullWidth
                     id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
+                    label="Username"
+                    name="username"
                     autoFocus
                 />
+                
                 <TextField
                     onChange={(e)=>{setPassword(e.target.value)}}
                     variant="outlined"
