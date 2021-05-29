@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import ArtistsAnalysisView from './ArtistsAnalysisView';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 
-const ArtistsAnalysisContainer = props => {
+const ArtistsAnalysisContainer = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -15,13 +14,14 @@ const ArtistsAnalysisContainer = props => {
 
     const {accessToken} = useSelector(state => state.logIn);
 
-
     const fetchArtists = () => {
         setLoading(true);
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/top/artists`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
             params: {
                 timeRange: timeRange.toUpperCase(),
-                token: accessToken,
                 limit: limit
             }
         })

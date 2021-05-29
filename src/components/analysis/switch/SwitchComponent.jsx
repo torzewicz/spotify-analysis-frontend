@@ -17,8 +17,8 @@ const SwitchComponent = (props) => {
                 setCurrentTab(newValue)
             }}
             centered>
-                <Tab label={'Artists'}></Tab>
-                <Tab label={'Tracks'}></Tab>
+                <Tab label={'Artists'}/>
+                <Tab label={'Tracks'}/>
             </Tabs>
             <div>
                 {currentTab === 0 && <ArtistsAnalysisContainer/>}

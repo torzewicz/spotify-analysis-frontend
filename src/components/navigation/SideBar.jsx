@@ -6,6 +6,7 @@ import DrawerContent from './DrawerContent';
 import {closeSidebarAction} from '../../redux/actions/layoutActions';
 import {useHistory, useLocation} from 'react-router-dom';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import {logOut} from "../../redux/actions/logInActions";
 
 const SideBar = ({window}) => {
     const classes = useStyles();
@@ -18,7 +19,7 @@ const SideBar = ({window}) => {
     const handleDrawerClose = useCallback(() => dispatch(closeSidebarAction()), [dispatch]);
 
     const handleLogOut = useCallback(() => {
-        // dispatch(logout(history));
+        dispatch(logOut(history));
         handleDrawerClose();
     }, [dispatch, history, handleDrawerClose]);
 

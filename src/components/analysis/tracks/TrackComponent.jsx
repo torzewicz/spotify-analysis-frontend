@@ -5,10 +5,13 @@ import {fancyTimeFormat} from '../../../utlis/TimeUtils';
 import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import Chip from '@material-ui/core/Chip';
 import StarIcon from '@material-ui/icons/Stars';
+import WhatshotIcon from '@material-ui/icons/Whatshot';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import SlowMotionVideoIcon from '@material-ui/icons/SlowMotionVideo';
+import ExplicitIcon from '@material-ui/icons/Explicit';
 
-
-const TrackComponent = ({track, atMinute}) => {
+const TrackComponent = ({track, atMinute, index}) => {
 
     const {
         name,
@@ -41,74 +44,142 @@ const TrackComponent = ({track, atMinute}) => {
     const {spotify: spotifyUrl} = externalUrls;
 
     return (
-        <Paper className={classes.trackContainer}>
+        <Paper elevation={15} className={classes.trackContainer}>
 
-            <Paper elevation={5} className={classes.imageContainer}
-                   onClick={() => window.open(spotifyUrl)}>
-                {width > height ? (
-                    <img src={url}
-                         alt={name}
-                         style={{width: 160}}
-                    />) : (
-                    <img src={url}
-                         alt={name}
-                         style={{
-                             height: 160
-                         }}
-                    />)}
-            </Paper>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center'
+            }}>
+                <Paper elevation={15} className={classes.imageContainer}
+                       onClick={() => window.open(spotifyUrl)}>
+                    {width > height ? (
+                        <div style={{
+                            borderRadius: 30,
+                            overflow: 'hidden',
+                            width: 160,
+                            height: 160
+                        }}>
+                            <img src={url}
+                                 alt={name}
+                                 style={{
+                                     height: '100%',
+                                 }}
+                            /></div>) : (
+                        <div style={{
+                            borderRadius: 30,
+                            overflow: 'hidden',
+                            width: 160,
+                            height: 160
+                        }}>
+                            <img src={url}
+                                 alt={name}
+                                 style={{
+                                     height: '100%',
+                                 }}
+                            /></div>)}
+                </Paper>
+            </div>
 
             <div className={classes.infoContainer}>
 
-                <Typography className={classes.nameText} variant={'h5'}>{name}</Typography>
-                <Typography className={classes.descriptionText}
-                            variant={'h6'}>{artists.map(i => i.name).join(", ")}</Typography>
                 <div style={{
                     display: 'flex',
-                    flexDirection: 'row'
+                    flexDirection: 'row',
+                    alignItems: 'center'
                 }}>
-                    <Typography
-                        className={classes.descriptionText}>{`Duration: ${fancyTimeFormat(duration_ms / 1000)}`}</Typography>
-                    {!!atMinute && <Typography
-                        className={classes.descriptionText} style={{
-                        marginLeft: 50
-                    }}>{`Currently At: ${fancyTimeFormat(atMinute / 1000)}`}</Typography>}
+                    <Typography className={classes.nameText} variant={'h5'}>{name}</Typography>
+                    <Tooltip title={'Explicit'} style={{
+                        marginLeft: 5,
+                        visibility: explicit ? 'visible' : 'hidden'
+                    }}><ExplicitIcon fontSize={'large'}/></Tooltip>
                 </div>
-                <Typography className={classes.descriptionText} style={{
-                    visibility: explicit ? 'visible' : 'hidden'
-                }}>{`Explicit`}</Typography>
-                <audio controls={'controls'}>
-                    <source src={preview_url} type={'audio/mpeg'}/>
-                </audio>
+                <Typography className={classes.descriptionText}
+                            variant={'h6'}>{artists.map(i => i.name).join(", ")}</Typography>
+
+
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center'
+                }}>
+                    <div style={{
+                        display: 'block',
+                    }}>
+                        <Tooltip title={`Duration`}>
+                            <Chip label={fancyTimeFormat(duration_ms / 1000)} icon={<AccessTimeIcon/>}
+                                  variant={'outlined'} style={{
+                                padding: 6,
+                                fontWeight: 'bold'
+                            }}/>
+                        </Tooltip>
+                    </div>
+
+                    {!!atMinute && <div style={{
+                        display: 'block',
+                        marginLeft: 20
+                    }}>
+                        <Tooltip title={`Currently at`}>
+                            <Chip label={fancyTimeFormat(atMinute / 1000)} icon={<SlowMotionVideoIcon/>}
+                                  variant={'outlined'} style={{
+                                padding: 6,
+                                fontWeight: 'bold'
+                            }}/>
+                        </Tooltip>
+                    </div>}
+
+                </div>
+                <div style={{
+                    paddingTop: 5,
+                    paddingBottom: 5
+                }}>
+                    <audio controls={'controls'}>
+                        <source src={preview_url} type={'audio/mpeg'}/>
+                    </audio>
+                </div>
             </div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+            }}>
+                {index && <div>
+                    <Tooltip title={`Your track number ${index}`}>
+                        <Chip label={`${index}`} icon={<StarIcon/>} variant={'outlined'}/>
+                    </Tooltip>
+                </div>}
 
-            {polishTopListRank && <div className={classes.infoContainer}>
-                <Tooltip title={`Top ${polishTopListRank} most popular in Poland`}>
-                    <Chip label={`Top ${polishTopListRank}`} icon={<StarIcon/>} variant={'outlined'}/>
-                </Tooltip>
-            </div>}
-
+                {!!popularity ? <div>
+                    <Tooltip title={`Popularity: ${popularity}`}>
+                        <Chip label={`${popularity}`} icon={<WhatshotIcon/>} variant={'outlined'}/>
+                    </Tooltip>
+                </div> : <Tooltip title={`Popularity: ${0}`}>
+                    <Chip label={`${0}`} icon={<WhatshotIcon/>} variant={'outlined'}/>
+                </Tooltip>}
+            </div>
         </Paper>);
 };
 
+
 const useStyles = makeStyles(theme => ({
     trackContainer: {
+        borderRadius: 30,
         display: 'flex',
         width: '100%',
         flexDirection: 'row',
-        height: 200,
-        padding: 20,
-        marginBottom: theme.spacing(1)
+        padding: 10,
+        height: 200
     },
     imageContainer: {
-        maxWidth: 160,
-        flex: 1,
-        cursor: 'pointer'
+        borderRadius: 30,
+        cursor: 'pointer',
+        maxHeight: 160,
+
     },
     infoContainer: {
-        flex: 2,
-        marginLeft: 20,
-        width: '100%',
+        flex: 4,
+        marginLeft: 10,
         padding: 5,
         display: 'flex',
         flexDirection: 'column',

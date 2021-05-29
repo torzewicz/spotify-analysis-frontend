@@ -21,9 +21,11 @@ const TracksAnalysisContainer = () => {
         if (accessToken) {
             setLoading(true);
             axios.get(`${REACT_APP_BACKEND_URL}/top/tracks`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
                 params: {
                     timeRange: timeRange.toUpperCase(),
-                    token: accessToken,
                     limit: limit
                 }
             })

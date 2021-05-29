@@ -1,145 +1,194 @@
-import React,{useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
+import {LinearProgress, Paper} from "@material-ui/core";
+import {logIn} from "../../redux/actions/logInActions";
+import {useDispatch, useSelector} from "react-redux";
+import useFieldValidation from "../../utlis/FieldValidation";
+import {
+    validateEmail,
+    validatePasswordOnRegister,
+    validateRepeatedPassword,
+    validateUsername
+} from "../../utlis/Validation";
+import {createUserAction} from "../../redux/actions/registerActions";
+import ValidatedTextInputField from "../analysis/generic/inputs/ValidatedTextInputField";
+import ErrorAlert from "../analysis/generic/feedback/alerts/ErrorAlert";
 
 const {
     REACT_APP_BACKEND_URL,
 } = process.env;
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-      marginTop: theme.spacing(8),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    avatar: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-      width: '100%', // Fix IE 11 issue.
-      marginTop: theme.spacing(1),
-    },
-    submit: {
-      margin: theme.spacing(3, 0, 2),
-    },
-  }));
 
-  
-const RegisterContainer =() => {
+const RegisterContainer = () => {
 
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [repeatedPassword, setRepeatedPassword] = useState('');
-    
+    const logInState = useSelector(state => state.logIn);
+    const registerState = useSelector(state => state.register);
+    const emailField = useFieldValidation('', validateEmail);
+    const usernameField = useFieldValidation('', validateUsername);
+    const passwordField = useFieldValidation('', validatePasswordOnRegister);
+
+    const validatePasswordConfirmation = useCallback(validateRepeatedPassword(passwordField.value), [passwordField.value]);
+    const passwordRepeatField = useFieldValidation('', validatePasswordConfirmation);
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const [submitDisabled, setSubmitDisabled] = useState(true);
+
+    useEffect(() => {
+        if (!!usernameField.value && !usernameField.error && !!passwordField.value && !passwordField.error && !!emailField.value && !emailField.error && !!passwordRepeatField.value && !passwordRepeatField.error) {
+            setSubmitDisabled(false);
+        } else {
+            setSubmitDisabled(true)
+        }
+    }, [usernameField, passwordField, emailField, passwordRepeatField]);
+
+    const {
+        accessToken
+    } = logInState;
+
+    const {
+        user,
+        loading,
+        error
+    } = registerState;
+
+
+    useEffect(() => {
+        if (!!accessToken) {
+            history.push('/')
+        }
+    }, [accessToken]);
+
+    useEffect(() => {
+        if (!!user) {
+            dispatch(logIn({
+                username: usernameField.value,
+                password: passwordField.value
+            }))
+        }
+    }, [user]);
+
     const register = () => {
-        axios.post(`${REACT_APP_BACKEND_URL}/auth/signup`, {
-            email: email,
-            password: password,
-            username: username
-        }).then(data=>{
-            console.log(data);
-        })
+        const request = {
+            username: usernameField.value,
+            password: passwordField.value,
+            email: emailField.value,
+        };
+        dispatch(createUserAction(request))
     }
     const classes = useStyles();
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-                <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-                Sign up
-            </Typography>
-            <form className={classes.form} noValidate>
-                <TextField
-                    onChange={(e)=>{setEmail(e.target.value)}}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    autoFocus
-                />
-                 <TextField
-                    onChange={(e)=>{setUsername(e.target.value)}}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                />
-                <TextField
-                    onChange={(e)=>{setPassword(e.target.value)}}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                />
-                <TextField
-                    onChange={(e)=>{setRepeatedPassword(e.target.value)}}
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Repeat Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                />
-                <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                />
-                <Button
-                    fullWidth
-                    onClick={()=>{register()}}
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                >
-                    Sign Up
-                </Button>
-                <Grid container>
-                    <Grid item xs>
-                        <Link href="#" variant="body2">
-                            Forgot password?
-                        </Link>
+        <div style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+        }}>
+            <Paper className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon/>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Sign up
+                </Typography>
+                <div style={{
+                    padding: 10,
+                    visibility: !!error ? 'visible' : 'hidden',
+                    height: 80
+                }}>
+                    <ErrorAlert error={error}/>
+                </div>
+                <form className={classes.form} noValidate>
+                    <ValidatedTextInputField
+                        label={'Email'}
+                        variant={'outlined'}
+                        field={emailField}
+                        className={classes.email}
+                    />
+                    <ValidatedTextInputField
+                        label={'Username'}
+                        variant={'outlined'}
+                        field={usernameField}
+                    />
+
+                    <ValidatedTextInputField
+                        label={'Password'}
+                        variant={'outlined'}
+                        field={passwordField}
+                        isPassword={true}
+                    />
+                    <ValidatedTextInputField
+                        label={'Repeat password'}
+                        variant={'outlined'}
+                        field={passwordRepeatField}
+                        isPassword={true}
+                    />
+                    <div>
+                        <LinearProgress style={{
+                            visibility: loading ? 'visible' : 'hidden'
+                        }}/>
+                        <Button
+                            disabled={submitDisabled}
+                            fullWidth
+                            onClick={() => {
+                                register()
+                            }}
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        >
+                            Sign Up
+                        </Button>
+                    </div>
+                    <Grid container>
+                        <Grid item xs={12}>
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'center'
+                            }}>
+                                <Link to={'/login'}>
+                                    Sign In
+                                </Link>
+                            </div>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <Link to={'/login'}>
-                            Have an account? Sign In
-                        </Link>
-                    </Grid>
-                </Grid>
-            </form>
-            </div>
-      </Container>
+                </form>
+            </Paper>
+        </div>
     )
-}
+};
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        padding: theme.spacing(4),
+        margin: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+}));
+
 export default RegisterContainer;

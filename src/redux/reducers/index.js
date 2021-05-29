@@ -3,8 +3,12 @@ import {combineReducers} from 'redux';
 
 import layoutReducer from './layoutReducer';
 import logInReducer from './logInReducer';
+import userReducer from "./userReducer";
+import registerReducer from "./registerReducer";
 
 export default combineReducers({
     layout: layoutReducer,
-    logIn: logInReducer
+    logIn: logInReducer,
+    user: userReducer,
+    register: registerReducer,
 });

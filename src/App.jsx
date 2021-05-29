@@ -5,6 +5,7 @@ import TopBar from './components/layout/TopBar';
 import SideBar from './components/navigation/SideBar';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import MainNavigation from './routes/MainNavigation';
+import AxiosRefreshProvider from "./utlis/AxiosRefreshProvider";
 
 const App = () => {
     const classes = useStyles();
@@ -12,7 +13,7 @@ const App = () => {
     return (
         <div>
             <Router basename={process.env.PUBLIC_URL}>
-
+                <AxiosRefreshProvider/>
                 <div className={classes.root}>
 
                     <CssBaseline/>

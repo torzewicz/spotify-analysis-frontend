@@ -3,6 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import FilterTopListComponent from '../generic/FilterTopListComponent';
 import TrackComponent from './TrackComponent';
+import Grid from "@material-ui/core/Grid";
 
 
 const TracksAnalysisView = props => {
@@ -28,12 +29,16 @@ const TracksAnalysisView = props => {
                 setLimit={setLimit}
                 timeRange={timeRange}
                 setTimeRange={setTimeRange}
+                loading={loading}
             />
 
-            <LinearProgress style={{visibility: loading ? 'visible' : 'hidden'}}/>
-
             <div>
-                {tracksData && tracksData.map(item => <TrackComponent track={item} key={item.id}/>)}
+
+                <Grid container spacing={2}>
+                    {tracksData && tracksData.map((item, index) => <Grid item xs={6}> <TrackComponent track={item}
+                                                                                                      key={item.id}
+                                                                                                      index={index + 1}/></Grid>)}
+                </Grid>
             </div>
 
         </div>
