@@ -40,7 +40,7 @@ export const fetchUserAction = () => (dispatch, getState) => {
 
 };
 
-export const connectSpotifyAction = (code) => (dispatch, getState) => {
+export const connectSpotifyAction = (code, redirectUri) => (dispatch, getState) => {
 
     const {accessToken} = getState().logIn;
     dispatch({type: CONNECT_SPOTIFY});
@@ -50,7 +50,8 @@ export const connectSpotifyAction = (code) => (dispatch, getState) => {
                 Authorization: `Bearer ${accessToken}`
             },
             params: {
-                code
+                code,
+                redirectUri
             }
         })
         .then(({data}) => {

@@ -21,6 +21,7 @@ const WelcomeContainer = () => {
 
     const classes = useStyles();
 
+    const location = useLocation();
     const query = new URLSearchParams(useLocation().search);
     const dispatch = useDispatch();
     const {accessToken} = useSelector(state => state.logIn);
@@ -43,7 +44,9 @@ const WelcomeContainer = () => {
 
     useEffect(() => {
         if (!!query.get('code') && !!user && !user.connectedToSpotify) {
-            dispatch(connectSpotifyAction(query.get('code')));
+            const returnLocation = `${window.location.protocol}//${window.location.hostname}`
+            console.log(returnLocation)
+            dispatch(connectSpotifyAction(query.get('code'), returnLocation));
         }
     }, [query.get('code'), user]);
 
@@ -68,6 +71,9 @@ const WelcomeContainer = () => {
 
     useEffect(() => {
         if (!!user && user.connectedToSpotify && !!accessToken) {
+            if (location.pathname !== '/') {
+                history.push('/');
+            }
             fetchCurrentTrack();
         }
     }, [user, accessToken]);
