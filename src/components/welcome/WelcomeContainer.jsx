@@ -37,10 +37,17 @@ const WelcomeContainer = () => {
     useEffect(() => {
         if (!user) {
             dispatch(fetchUserAction())
+        } else {
+            const intervalId = fetchCurrentTrack();
+
+            return () => {
+                if (!!intervalId) {
+                    clearInterval(intervalId);
+                }
+            }
         }
 
-    }, []);
-
+    }, [user]);
 
     useEffect(() => {
         if (!!query.get('code') && !!user && !user.connectedToSpotify) {
@@ -51,32 +58,29 @@ const WelcomeContainer = () => {
     }, [query.get('code'), user]);
 
     const fetchCurrentTrack = () => {
-        setInterval(() => {
-            if (!!accessToken) {
-                axios.get(`${REACT_APP_BACKEND_URL}/spotify-user/current`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    }
-                })
-                    .then(({data}) => {
-                        setCurrentPlaying(data);
-                    })
-                    .catch(e => {
-                        console.log(e)
-                    });
-            }
-        }, 1000);
-    };
-
-
-    useEffect(() => {
         if (!!user && user.connectedToSpotify && !!accessToken) {
             if (location.pathname !== '/') {
                 history.push('/');
             }
-            fetchCurrentTrack();
+            return setInterval(() => {
+                if (!!accessToken) {
+                    axios.get(`${REACT_APP_BACKEND_URL}/spotify-user/current`, {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        }
+                    })
+                        .then(({data}) => {
+                            setCurrentPlaying(data);
+                        })
+                        .catch(e => {
+                            console.log(e)
+                        });
+                }
+            }, 1000);
+        } else {
+            return undefined;
         }
-    }, [user, accessToken]);
+    };
 
     return (
         <div className={classes.mainDiv}>

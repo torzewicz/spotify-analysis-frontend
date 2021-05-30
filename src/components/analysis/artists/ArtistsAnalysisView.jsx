@@ -3,15 +3,12 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import FilterTopListComponent from '../generic/FilterTopListComponent';
 import Grid from "@material-ui/core/Grid";
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import StarIcon from "@material-ui/icons/Stars";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import PeopleIcon from '@material-ui/icons/People';
-import List from "@material-ui/core/List";
-import {ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import AlbumIcon from '@material-ui/icons/Album';
 
 
@@ -163,7 +160,7 @@ const ArtistsAnalysisView = props => {
 
             <div>
                 <Grid container spacing={2}>
-                    {artistsData && artistsData.map((item, index) => <Grid item xs={6}> <ArtistComponent artist={item}
+                    {artistsData && artistsData.map((item, index) => <Grid item xs={6} key={index}> <ArtistComponent artist={item}
                                                                                                          key={item.id}
                                                                                                          index={index + 1}/>
                     </Grid>)}
