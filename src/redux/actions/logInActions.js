@@ -1,4 +1,4 @@
-import {LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOG_OUT} from './types/loginActions';
+import {LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOG_OUT, VERIFIED} from './types/loginActions';
 import axios from "axios";
 
 const {
@@ -11,7 +11,6 @@ export const logIn = (loginRequest) => (dispatch, getState) => {
         username,
         password
     } = loginRequest;
-
 
     axios.post(`${REACT_APP_BACKEND_URL}/auth/login`, {
         username: username,
@@ -35,6 +34,12 @@ export const logOut = () => (dispatch, getState) => {
     dispatch({type: LOG_OUT});
 };
 
+export const verifyAction = (payload) => (dispatch, getState) => {
+    dispatch({
+        type: VERIFIED,
+        payload: payload
+    })
+};
 // export const connectedToSpotify = (payload) => (dispatch, getState) => {
 //     dispatch({
 //         type: CONNECTED_TO_SPOTIFY,

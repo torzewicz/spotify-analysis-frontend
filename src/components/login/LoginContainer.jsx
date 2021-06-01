@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -9,7 +10,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {Link, useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn} from '../../redux/actions/logInActions';
+import {logIn, verifyAction} from '../../redux/actions/logInActions';
 import {LinearProgress, Paper} from "@material-ui/core";
 import {validatePasswordOnRegister, validateUsername} from "../../utlis/Validation";
 import useFieldValidation from "../../utlis/FieldValidation";
@@ -19,9 +20,11 @@ import ValidatedTextInputField from "../analysis/generic/inputs/ValidatedTextInp
 const LoginContainer = () => {
 
     const classes = useStyles();
-
     const usernameField = useFieldValidation('', validateUsername);
     const passwordField = useFieldValidation('', validatePasswordOnRegister);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [showError, setShowError] = useState(false)
     const history = useHistory();
     const logInState = useSelector(state => state.logIn);
     const dispatch = useDispatch();
@@ -100,6 +103,7 @@ const LoginContainer = () => {
                         <LinearProgress style={{
                             visibility: loading ? 'visible' : 'hidden'
                         }}/>
+                        {/* {showError ? <Alert className="hidden" severity="error">Login failed — try again!</Alert> : null } */}
                         <Button
                             disabled={submitDisabled}
                             fullWidth
@@ -150,6 +154,5 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
-
 
 export default LoginContainer;

@@ -9,7 +9,7 @@ const PrivateRoute = ({children, ...rest}) => {
         <Route
             {...rest}
             render={({location}) =>
-                (isAuthenticated) ? (
+                (accessToken) ? (
                     children
                 ) : (
                     <Redirect

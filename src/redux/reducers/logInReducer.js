@@ -2,7 +2,8 @@ import {
     LOG_IN,
     LOG_OUT,
     LOG_IN_SUCCESS,
-    LOG_IN_FAILURE
+    LOG_IN_FAILURE,
+    VERIFIED
 } from '../actions/types/loginActions';
 
 const getAuthStateFromLocalStorage = () => {
@@ -23,6 +24,8 @@ const initialState = {
     exp: undefined,
     isAuthenticated: false,
     error: null,
+    connectedToSpotify: false,
+    verified: false,
     ...getAuthStateFromLocalStorage()
 };
 
@@ -65,6 +68,13 @@ const logInReducer = (state = initialState, action) => {
                 exp: undefined,
                 error: null,
             };
+        case VERIFIED: {
+
+            return {
+                ...state,
+                verified: true,
+            }
+        }
         default:
             return state;
     }

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -138,6 +139,7 @@ const RegisterContainer = () => {
                         <LinearProgress style={{
                             visibility: loading ? 'visible' : 'hidden'
                         }}/>
+                        {/* {showError ? <Alert className="hidden" severity="error">Registration failed — try again!</Alert> : null } */}
                         <Button
                             disabled={submitDisabled}
                             fullWidth
