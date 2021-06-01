@@ -1,32 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Alert from '@material-ui/lab/Alert';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import {Link, useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn, verifyAction} from '../../redux/actions/logInActions';
+import {logIn} from '../../redux/actions/logInActions';
 import {LinearProgress, Paper} from "@material-ui/core";
 import {validatePasswordOnRegister, validateUsername} from "../../utlis/Validation";
 import useFieldValidation from "../../utlis/FieldValidation";
 import ValidatedTextInputField from "../analysis/generic/inputs/ValidatedTextInputField";
-
 
 const LoginContainer = () => {
 
     const classes = useStyles();
     const usernameField = useFieldValidation('', validateUsername);
     const passwordField = useFieldValidation('', validatePasswordOnRegister);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [showError, setShowError] = useState(false)
     const history = useHistory();
     const logInState = useSelector(state => state.logIn);
+    const verificationState = useSelector(state => state.verification);
     const dispatch = useDispatch();
 
     const [submitDisabled, setSubmitDisabled] = useState(true);
@@ -42,11 +36,15 @@ const LoginContainer = () => {
     const {
         accessToken,
         loading,
-        error
+        error,
     } = logInState;
 
-    const login = () => {
+    const {
+        logged,
+        verified
+    } = verificationState;
 
+    const login = () => {
         const loginRequest = {
             username: usernameField.value,
             password: passwordField.value
@@ -67,6 +65,11 @@ const LoginContainer = () => {
         }
     }, [error]);
 
+    useEffect(() => {
+        if (!verified && logged) {
+            history.push('/verification')
+        }
+    }, [logged]);
 
     return (
         <div style={{

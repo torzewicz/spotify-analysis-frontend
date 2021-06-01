@@ -3,13 +3,12 @@ import axios from 'axios';
 import {
     SIGN_UP,
     SIGN_UP_FAILURE,
-    SIGN_UP_SUCCESS
+    SIGN_UP_SUCCESS,
 } from "./types/registerActions";
 
 const {
     REACT_APP_BACKEND_URL: baseUrl,
 } = process.env;
-
 
 export const createUserAction = (request) => (dispatch, getState) => {
     dispatch({type: SIGN_UP});
@@ -27,5 +26,4 @@ export const createUserAction = (request) => (dispatch, getState) => {
                 payload: e
             })
         })
-
 };

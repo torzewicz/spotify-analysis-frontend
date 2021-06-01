@@ -73,11 +73,8 @@ const RegisterContainer = () => {
     }, [accessToken]);
 
     useEffect(() => {
-        if (!!user) {
-            dispatch(logIn({
-                username: usernameField.value,
-                password: passwordField.value
-            }))
+        if (!loading && !!user) {
+            history.push('/verification')
         }
     }, [user]);
 
@@ -139,7 +136,6 @@ const RegisterContainer = () => {
                         <LinearProgress style={{
                             visibility: loading ? 'visible' : 'hidden'
                         }}/>
-                        {/* {showError ? <Alert className="hidden" severity="error">Registration failed — try again!</Alert> : null } */}
                         <Button
                             disabled={submitDisabled}
                             fullWidth

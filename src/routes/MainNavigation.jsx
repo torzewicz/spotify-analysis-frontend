@@ -7,7 +7,6 @@ import SwitchComponent from '../components/analysis/switch/SwitchComponent';
 import WelcomeContainer from '../components/welcome/WelcomeContainer';
 import LoginContainer from '../components/login/LoginContainer';
 import RegisterContainer from '../components/login/RegisterContainer';
-import PrivateRoute from "./PrivateRoute";
 import VerificationContainer from '../components/login/VerificationContainer';
 
 const MainNavigation = () => {

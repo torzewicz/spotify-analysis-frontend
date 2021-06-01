@@ -1,21 +1,17 @@
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {Link, useHistory} from 'react-router-dom';
-import axios from 'axios';
+import {useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn, verifyAction} from '../../redux/actions/logInActions';
+import {verifyAction, relog} from '../../redux/actions/verificationActions';
 
 const {
     REACT_APP_BACKEND_URL,
@@ -46,30 +42,34 @@ const VerificationContainer =() => {
     const [code, setCode] = useState('');
     const [showError, setShowError] = useState(false)
     const history = useHistory();
-    const logInState = useSelector(state => state.logIn);
+    const verificationState = useSelector(state => state.verification);
     const dispatch = useDispatch();
     const {
-        logged,
+        error,
         verified,
-        accessToken
-    } = logInState;
+    } = verificationState;
 
     const verify = () => {
-        if(logged && !verified){
-            axios.post(`${REACT_APP_BACKEND_URL}/auth/verify`, {
-                email: email,
-                code: code
-            }).then(({data}) => {
-                console.log(data)
-                dispatch(verifyAction(data))
-                history.push('/')
-            }).catch(error => {
-                setShowError(true);
-            })
-        } else {
-            history.push('/');
+        const verifyRequest = {
+            email: email,
+            code: code
         }
+        dispatch(verifyAction(verifyRequest))
     }
+
+    useEffect(() => {
+        if (!!verified) {
+            dispatch(relog())
+            history.push('/login')
+        }
+    }, [verified]);
+
+    useEffect(() => {
+        if (error) {
+            setShowError(true);
+        }
+    }, [error]);
+
     const classes = useStyles();
     return (
         <Container component="main" maxWidth="xs">

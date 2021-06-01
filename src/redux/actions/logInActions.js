@@ -1,4 +1,5 @@
-import {LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOG_OUT, VERIFIED} from './types/loginActions';
+import {LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOG_OUT} from './types/loginActions';
+import {NOT_VERIFIED} from './types/verificationActionsTypes';
 import axios from "axios";
 
 const {
@@ -16,30 +17,29 @@ export const logIn = (loginRequest) => (dispatch, getState) => {
         username: username,
         password: password
     }).then(({data}) => {
-        dispatch({
-            type: LOG_IN_SUCCESS,
-            payload: data
-        });
+        if(data.token) {
+            dispatch({
+                type: LOG_IN_SUCCESS,
+                payload: data
+            });
+        } else {
+            dispatch({
+                type: NOT_VERIFIED,
+                payload: data
+            });
+        }
     }).catch(e => {
         dispatch({
             type: LOG_IN_FAILURE,
             payload: e
         })
     })
-
-
 };
 
 export const logOut = () => (dispatch, getState) => {
     dispatch({type: LOG_OUT});
 };
 
-export const verifyAction = (payload) => (dispatch, getState) => {
-    dispatch({
-        type: VERIFIED,
-        payload: payload
-    })
-};
 // export const connectedToSpotify = (payload) => (dispatch, getState) => {
 //     dispatch({
 //         type: CONNECTED_TO_SPOTIFY,
