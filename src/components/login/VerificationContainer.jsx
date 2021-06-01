@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import {Link, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn, verified} from '../../redux/actions/logInActions';
+import {logIn, verifyAction} from '../../redux/actions/logInActions';
 
 const {
     REACT_APP_BACKEND_URL,
@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-
 const VerificationContainer =() => {
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
@@ -55,18 +54,20 @@ const VerificationContainer =() => {
         accessToken
     } = logInState;
 
-    const login = () => {
+    const verify = () => {
         if(logged && !verified){
             axios.post(`${REACT_APP_BACKEND_URL}/auth/verify`, {
                 email: email,
                 code: code
             }).then(({data}) => {
                 console.log(data)
-                dispatch(verified(data))
+                dispatch(verifyAction(data))
                 history.push('/')
             }).catch(error => {
                 setShowError(true);
             })
+        } else {
+            history.push('/');
         }
     }
     const classes = useStyles();
@@ -92,7 +93,6 @@ const VerificationContainer =() => {
                     name="email"
                     autoFocus
                 />
-                
                 <TextField
                     onChange={(e)=>{setCode(e.target.value)}}
                     variant="outlined"
@@ -109,7 +109,7 @@ const VerificationContainer =() => {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    onClick={()=>{login()}}
+                    onClick={()=>{verify()}}
                 >
                 Verify email
                 </Button>

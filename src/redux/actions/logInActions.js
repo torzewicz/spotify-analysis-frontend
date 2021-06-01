@@ -14,7 +14,7 @@ export const connectedToSpotify = (payload) => (dispatch, getState) => {
     })
 };
 
-export const verified = (payload) => (dispatch, getState) => {
+export const verifyAction = (payload) => (dispatch, getState) => {
     dispatch({
         type: VERIFIED,
         payload: payload

@@ -14,7 +14,8 @@ import Container from '@material-ui/core/Container';
 import {Link, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn} from '../../redux/actions/logInActions';
+import {logIn, verifyAction} from '../../redux/actions/logInActions';
+import store from '../../redux/store';
 
 const {
     REACT_APP_BACKEND_URL,
@@ -51,24 +52,28 @@ const LoginContainer =() => {
     const {
         logged,
         verified,
+        accessToken
     } = logInState;
 
     const login = () => {
-        if(!logged){
+        console.log(store.getState())
+        if(!accessToken){
             axios.post(`${REACT_APP_BACKEND_URL}/auth/login`, {
                 username: username,
                 password: password
             }).then(({data}) => {
-                console.log(data)
                 dispatch(logIn(data))
-                if(!verified) {
-                    history.push('/verification');
-                } else {
+                if(data.token) {
+                    dispatch(verifyAction(data))
                     history.push('/');
+                } else {
+                    history.push('/verification');
                 }
             }).catch(error => {
                 setShowError(true);
             })
+        } else {
+            history.push('/');
         }
     }
     const classes = useStyles();
@@ -113,7 +118,7 @@ const LoginContainer =() => {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    onClick={()=>{login()}}
+                    onClick={(e)=>{e.preventDefault();login()}}
                 >
                 Sign In
                 </Button>

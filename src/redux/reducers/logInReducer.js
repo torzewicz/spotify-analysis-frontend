@@ -12,7 +12,8 @@ const logInReducer = (state = initialState, action) => {
         case LOG_IN:
             return {
                 ...state,
-                logged: true
+                logged: true,
+                accessToken: action.payload.token
             };
         case CONNECTED_TO_SPOTIFY: {
             return {
@@ -25,7 +26,6 @@ const logInReducer = (state = initialState, action) => {
             return {
                 ...state,
                 verified: true,
-                accessToken: action.payload.token
             }
         }
         default:
