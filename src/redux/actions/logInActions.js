@@ -1,4 +1,4 @@
-import {LOG_IN, CONNECTED_TO_SPOTIFY} from './types';
+import {LOG_IN, CONNECTED_TO_SPOTIFY, VERIFIED} from './types';
 
 export const logIn = (payload) => (dispatch, getState) => {
     dispatch({
@@ -10,6 +10,13 @@ export const logIn = (payload) => (dispatch, getState) => {
 export const connectedToSpotify = (payload) => (dispatch, getState) => {
     dispatch({
         type: CONNECTED_TO_SPOTIFY,
+        payload: payload
+    })
+};
+
+export const verified = (payload) => (dispatch, getState) => {
+    dispatch({
+        type: VERIFIED,
         payload: payload
     })
 };

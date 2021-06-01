@@ -1,17 +1,20 @@
 import React,{useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Link} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
+import {Link, useHistory} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {logIn} from '../../redux/actions/logInActions';
 
 const {
     REACT_APP_BACKEND_URL,
@@ -44,6 +47,9 @@ const RegisterContainer =() => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [repeatedPassword, setRepeatedPassword] = useState('');
+    const [showError, setShowError] = useState(false)
+    const dispatch = useDispatch();
+    const history = useHistory();
     
     const register = () => {
         axios.post(`${REACT_APP_BACKEND_URL}/auth/signup`, {
@@ -52,6 +58,10 @@ const RegisterContainer =() => {
             username: username
         }).then(data=>{
             console.log(data);
+            dispatch(logIn(data))
+            history.push('/verification');
+        }).catch(error => {
+            setShowError(true);
         })
     }
     const classes = useStyles();
@@ -112,10 +122,7 @@ const RegisterContainer =() => {
                     id="password"
                     autoComplete="current-password"
                 />
-                <FormControlLabel
-                    control={<Checkbox value="remember" color="primary" />}
-                    label="Remember me"
-                />
+                {showError ? <Alert className="hidden" severity="error">Registration failed — try again!</Alert> : null }
                 <Button
                     fullWidth
                     onClick={()=>{register()}}
@@ -127,9 +134,6 @@ const RegisterContainer =() => {
                 </Button>
                 <Grid container>
                     <Grid item xs>
-                        <Link href="#" variant="body2">
-                            Forgot password?
-                        </Link>
                     </Grid>
                     <Grid item>
                         <Link to={'/login'}>

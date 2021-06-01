@@ -1,3 +1,4 @@
+
 import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -14,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import {Link, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn} from '../../redux/actions/logInActions';
+import {logIn, verified} from '../../redux/actions/logInActions';
 
 const {
     REACT_APP_BACKEND_URL,
@@ -41,9 +42,9 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 
-const LoginContainer =() => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+const VerificationContainer =() => {
+    const [email, setEmail] = useState('');
+    const [code, setCode] = useState('');
     const [showError, setShowError] = useState(false)
     const history = useHistory();
     const logInState = useSelector(state => state.logIn);
@@ -51,21 +52,18 @@ const LoginContainer =() => {
     const {
         logged,
         verified,
+        accessToken
     } = logInState;
 
     const login = () => {
-        if(!logged){
-            axios.post(`${REACT_APP_BACKEND_URL}/auth/login`, {
-                username: username,
-                password: password
+        if(logged && !verified){
+            axios.post(`${REACT_APP_BACKEND_URL}/auth/verify`, {
+                email: email,
+                code: code
             }).then(({data}) => {
                 console.log(data)
-                dispatch(logIn(data))
-                if(!verified) {
-                    history.push('/verification');
-                } else {
-                    history.push('/');
-                }
+                dispatch(verified(data))
+                history.push('/')
             }).catch(error => {
                 setShowError(true);
             })
@@ -80,34 +78,32 @@ const LoginContainer =() => {
                 <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-                Sign in
+                Verify email
             </Typography>
             <form className={classes.form} noValidate>
                 <TextField
-                    onChange={(e)=>{setUsername(e.target.value)}}
+                    onChange={(e)=>{setEmail(e.target.value)}}
                     variant="outlined"
                     margin="normal"
                     required
                     fullWidth
                     id="email"
-                    label="Username"
-                    name="username"
+                    label="Email"
+                    name="email"
                     autoFocus
                 />
                 
                 <TextField
-                    onChange={(e)=>{setPassword(e.target.value)}}
+                    onChange={(e)=>{setCode(e.target.value)}}
                     variant="outlined"
                     margin="normal"
                     required
                     fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
+                    name="code"
+                    label="Verification code"
+                    id="code"
                 />
-                 {showError ? <Alert className="hidden" severity="error">Login failed — try again!</Alert> : null }
+                {showError ? <Alert className="hidden" severity="error">Verification failed — try again!</Alert> : null }
                 <Button
                     fullWidth
                     variant="contained"
@@ -115,23 +111,11 @@ const LoginContainer =() => {
                     className={classes.submit}
                     onClick={()=>{login()}}
                 >
-                Sign In
+                Verify email
                 </Button>
-                <Grid container>
-                <Grid item xs>
-                    {/* <Link to={'/'} variant="body2">
-                    Forgot password?
-                    </Link> */}
-                </Grid>
-                <Grid item>
-                    <Link to={'/register'}>
-                    Don't have an account? Sign Up
-                    </Link>
-                </Grid>
-                </Grid>
             </form>
             </div>
       </Container>
     )
 }
-export default LoginContainer;
+export default VerificationContainer;

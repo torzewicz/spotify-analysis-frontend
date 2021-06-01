@@ -1,9 +1,10 @@
-import {LOG_IN, CONNECTED_TO_SPOTIFY} from '../actions/types';
+import {LOG_IN, CONNECTED_TO_SPOTIFY, VERIFIED} from '../actions/types';
 
 const initialState = {
     logged: false,
     accessToken: undefined,
-    connectedToSpotify: false
+    connectedToSpotify: false,
+    verified: false
 };
 
 const logInReducer = (state = initialState, action) => {
@@ -11,13 +12,20 @@ const logInReducer = (state = initialState, action) => {
         case LOG_IN:
             return {
                 ...state,
-                logged: true,
-                accessToken: action.payload.token
+                logged: true
             };
         case CONNECTED_TO_SPOTIFY: {
             return {
                 ...state,
                 connectedToSpotify: action.payload.connectedToSpotify
+            }
+        }
+        case VERIFIED: {
+
+            return {
+                ...state,
+                verified: true,
+                accessToken: action.payload.token
             }
         }
         default:

@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import {useLocation, useHistory} from 'react-router-dom';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {logIn, connectedToSpotify} from '../../redux/actions/logInActions';
+import {logIn, connectedToSpotify, verified} from '../../redux/actions/logInActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TrackComponent from '../analysis/tracks/TrackComponent';
 
@@ -26,7 +26,8 @@ const WelcomeContainer = () => {
     const history = useHistory();
 
     const {
-        logged,
+        connectedToSpotify,
+        verified,
         accessToken
     } = logInState;
 
@@ -76,7 +77,7 @@ const WelcomeContainer = () => {
 
 
     useEffect(() => {
-        fetchCurrentTrack();
+        //fetchCurrentTrack();
     }, [accessToken]);
 
     return (
@@ -94,7 +95,7 @@ const WelcomeContainer = () => {
                 alignItems: 'center',
                 width: '100%'
             }}>
-                {!logged ? <div>
+                {!connectedToSpotify ? <div>
                     <Typography variant={'h3'} color={'textSecondary'}>Log in with Spotify</Typography>
                     <div style={{
                         marginTop: 20,
