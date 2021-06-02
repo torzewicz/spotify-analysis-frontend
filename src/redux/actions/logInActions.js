@@ -31,7 +31,7 @@ export const logIn = (loginRequest) => (dispatch, getState) => {
     }).catch(e => {
         dispatch({
             type: LOG_IN_FAILURE,
-            payload: e
+            payload: new Error(e.response.data.message || "Error")
         })
     })
 };

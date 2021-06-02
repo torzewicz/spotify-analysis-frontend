@@ -1,20 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Alert from '@material-ui/lab/Alert';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import {Link, useHistory} from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import axios from 'axios';
 import {LinearProgress, Paper} from "@material-ui/core";
-import {logIn} from "../../redux/actions/logInActions";
 import {useDispatch, useSelector} from "react-redux";
 import useFieldValidation from "../../utlis/FieldValidation";
 import {
@@ -30,7 +22,6 @@ import ErrorAlert from "../analysis/generic/feedback/alerts/ErrorAlert";
 const {
     REACT_APP_BACKEND_URL,
 } = process.env;
-
 
 const RegisterContainer = () => {
 
@@ -64,7 +55,6 @@ const RegisterContainer = () => {
         loading,
         error
     } = registerState;
-
 
     useEffect(() => {
         if (!!accessToken) {
@@ -100,13 +90,6 @@ const RegisterContainer = () => {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <div style={{
-                    padding: 10,
-                    visibility: !!error ? 'visible' : 'hidden',
-                    height: 80
-                }}>
-                    <ErrorAlert error={error}/>
-                </div>
                 <form className={classes.form} noValidate>
                     <ValidatedTextInputField
                         label={'Email'}
@@ -132,6 +115,13 @@ const RegisterContainer = () => {
                         field={passwordRepeatField}
                         isPassword={true}
                     />
+                    <div style={{
+                        padding: !!error ? 10 : 0,
+                        visibility: !!error ? 'visible' : 'hidden',
+                        height: !!error ? 80 : 0,
+                    }}>
+                        <ErrorAlert error={error}/>
+                    </div>
                     <div>
                         <LinearProgress style={{
                             visibility: loading ? 'visible' : 'hidden'

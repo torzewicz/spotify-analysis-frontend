@@ -5,7 +5,7 @@ import {
 } from "./types/loginActions";
 
 import {
-    ERROR_VERIFICATION, VERIFIED
+    ERROR_VERIFICATION, VERIFIED, VERIFY
 } from "./types/verificationActionsTypes";
 
 const {
@@ -13,6 +13,7 @@ const {
 } = process.env;
 
 export const verifyAction = (verifyRequest) => (dispatch, getState) => {
+    dispatch({type: VERIFY})
     const {
         email,
         code
@@ -26,9 +27,10 @@ export const verifyAction = (verifyRequest) => (dispatch, getState) => {
             type: VERIFIED,
             payload: data
         })
-    }).catch(error => {
+    }).catch(e => {
         dispatch({
             type: ERROR_VERIFICATION,
+            payload: new Error(e.response.data.message || "Error")
         })    
     })
 };

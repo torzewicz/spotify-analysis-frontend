@@ -29,9 +29,9 @@ const MainNavigation = () => {
                 <PrivateRoute path={'/analysis'}>
                     <SwitchComponent/>
                 </PrivateRoute>
-                <PrivateRoute path={'/'}>
+                <Route path={'/'}>
                     <WelcomeContainer/>
-                </PrivateRoute>
+                </Route>
 
                 {/*<Route>*/}
                 {/*    <PageNotFoundComponent/>*/}

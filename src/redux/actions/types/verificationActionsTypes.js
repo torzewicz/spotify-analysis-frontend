@@ -1,3 +1,4 @@
+export const VERIFY = 'VERIFY';
 export const VERIFIED = 'VERIFIED';
 export const NOT_VERIFIED = 'NOT_VERIFIED';
 export const ERROR_VERIFICATION = 'ERROR_VERIFICATION';

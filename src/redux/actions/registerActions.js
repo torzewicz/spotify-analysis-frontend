@@ -23,7 +23,7 @@ export const createUserAction = (request) => (dispatch, getState) => {
         .catch(e => {
             dispatch({
                 type: SIGN_UP_FAILURE,
-                payload: e
+                payload: new Error(e.response.data.message || "Error")
             })
         })
 };

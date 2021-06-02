@@ -9,15 +9,16 @@ import {Link, useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {logIn} from '../../redux/actions/logInActions';
 import {LinearProgress, Paper} from "@material-ui/core";
-import {validatePasswordOnRegister, validateUsername} from "../../utlis/Validation";
+import {validatePassword, validateUsername} from "../../utlis/Validation";
 import useFieldValidation from "../../utlis/FieldValidation";
 import ValidatedTextInputField from "../analysis/generic/inputs/ValidatedTextInputField";
+import ErrorAlert from "../analysis/generic/feedback/alerts/ErrorAlert";
 
 const LoginContainer = () => {
 
     const classes = useStyles();
     const usernameField = useFieldValidation('', validateUsername);
-    const passwordField = useFieldValidation('', validatePasswordOnRegister);
+    const passwordField = useFieldValidation('', validatePassword);
     const history = useHistory();
     const logInState = useSelector(state => state.logIn);
     const verificationState = useSelector(state => state.verification);
@@ -88,7 +89,6 @@ const LoginContainer = () => {
                     e.preventDefault();
                     login();
                 }}>
-
                     <ValidatedTextInputField
                         label={'Username'}
                         variant={'outlined'}
@@ -101,12 +101,17 @@ const LoginContainer = () => {
                         field={passwordField}
                         isPassword={true}
                     />
-
+                    <div style={{
+                        padding: !!error ? 10 : 0,
+                        visibility: !!error ? 'visible' : 'hidden',
+                        height: !!error ? 80 : 0,
+                    }}>
+                        <ErrorAlert error={error}/>
+                    </div>
                     <div>
                         <LinearProgress style={{
                             visibility: loading ? 'visible' : 'hidden'
                         }}/>
-                        {/* {showError ? <Alert className="hidden" severity="error">Login failed — try again!</Alert> : null } */}
                         <Button
                             disabled={submitDisabled}
                             fullWidth
