@@ -2,7 +2,7 @@ import {
     LOG_IN,
     LOG_OUT,
     LOG_IN_SUCCESS,
-    LOG_IN_FAILURE
+    LOG_IN_FAILURE,
 } from '../actions/types/loginActions';
 
 const getAuthStateFromLocalStorage = () => {
@@ -23,6 +23,7 @@ const initialState = {
     exp: undefined,
     isAuthenticated: false,
     error: null,
+    connectedToSpotify: false,
     ...getAuthStateFromLocalStorage()
 };
 
@@ -35,7 +36,7 @@ const logInReducer = (state = initialState, action) => {
                 accessToken: undefined,
                 exp: undefined,
                 isAuthenticated: false,
-                error: null
+                error: null,
             };
         case LOG_IN_SUCCESS:
             localStorage.setItem('accessToken', action.payload.token);
@@ -45,14 +46,14 @@ const logInReducer = (state = initialState, action) => {
                 loading: false,
                 accessToken: action.payload.token,
                 exp: action.payload.exp,
-                isAuthenticated: true
+                isAuthenticated: true,
             };
         case LOG_IN_FAILURE:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
-                isAuthenticated: false
+                isAuthenticated: false,
             };
         case LOG_OUT:
             localStorage.removeItem('accessToken');

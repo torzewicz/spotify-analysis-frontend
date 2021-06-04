@@ -1,77 +1,73 @@
-import React, {useEffect, useState} from 'react';
+
+import React, {useState, useEffect} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import {makeStyles} from '@material-ui/core/styles';
-import {Link, useHistory} from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {logIn} from '../../redux/actions/logInActions';
+import { makeStyles } from '@material-ui/core/styles';
 import {LinearProgress, Paper} from "@material-ui/core";
-import {validatePassword, validateUsername} from "../../utlis/Validation";
-import useFieldValidation from "../../utlis/FieldValidation";
+import {useHistory} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {verifyAction, relog} from '../../redux/actions/verificationActions';
 import ValidatedTextInputField from "../analysis/generic/inputs/ValidatedTextInputField";
+import useFieldValidation from "../../utlis/FieldValidation";
 import ErrorAlert from "../analysis/generic/feedback/alerts/ErrorAlert";
+import {
+    validateCode,
+    validateEmail,
+} from "../../utlis/Validation";
 
-const LoginContainer = () => {
+const {
+    REACT_APP_BACKEND_URL,
+} = process.env;
 
-    const classes = useStyles();
-    const usernameField = useFieldValidation('', validateUsername);
-    const passwordField = useFieldValidation('', validatePassword);
+const VerificationContainer =() => {
+
+    const emailField = useFieldValidation('', validateEmail);
+    const codeField = useFieldValidation('', validateCode);
+    const [showError, setShowError] = useState(false)
     const history = useHistory();
-    const logInState = useSelector(state => state.logIn);
     const verificationState = useSelector(state => state.verification);
     const dispatch = useDispatch();
+    const {
+        error,
+        verified,
+        loading,
+    } = verificationState;
+
+    const verify = () => {
+        const verifyRequest = {
+            email: emailField.value,
+            code: codeField.value
+        }
+        dispatch(verifyAction(verifyRequest))
+    }
 
     const [submitDisabled, setSubmitDisabled] = useState(true);
 
     useEffect(() => {
-        if (!!usernameField.value && !usernameField.error && !!passwordField.value && !passwordField.error) {
+        if (!!emailField.value && !emailField.error && !!codeField.value && !codeField.error) {
             setSubmitDisabled(false);
         } else {
             setSubmitDisabled(true)
         }
-    }, [usernameField, passwordField]);
-
-    const {
-        accessToken,
-        loading,
-        error,
-    } = logInState;
-
-    const {
-        logged,
-        verified
-    } = verificationState;
-
-    const login = () => {
-        const loginRequest = {
-            username: usernameField.value,
-            password: passwordField.value
-        }
-        dispatch(logIn(loginRequest))
-    }
+    }, [emailField, codeField]);
 
     useEffect(() => {
-        if (!!accessToken) {
-            history.push('/')
+        if (!!verified) {
+            dispatch(relog())
+            history.push('/login')
         }
-    }, [accessToken]);
+    }, [verified]);
 
     useEffect(() => {
         if (error) {
-            usernameField.setValue('');
-            passwordField.setValue('');
+            emailField.setValue('');
+            codeField.setValue('');
         }
     }, [error]);
 
-    useEffect(() => {
-        if (!verified && logged) {
-            history.push('/verification')
-        }
-    }, [logged]);
-
+    const classes = useStyles();
     return (
         <div style={{
             display: 'flex',
@@ -83,25 +79,24 @@ const LoginContainer = () => {
                     <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Verify email
                 </Typography>
                 <form className={classes.form} onSubmit={(e) => {
                     e.preventDefault();
-                    login();
+                    verify();
                 }}>
                     <ValidatedTextInputField
-                        label={'Username'}
+                        label={'Email'}
                         variant={'outlined'}
-                        field={usernameField}
+                        field={emailField}
+                        className={classes.email}
                     />
-
                     <ValidatedTextInputField
-                        label={'Password'}
+                        label={'Verification code'}
                         variant={'outlined'}
-                        field={passwordField}
-                        isPassword={true}
+                        field={codeField}
                     />
-                    <div style={{
+                       <div style={{
                         padding: !!error ? 10 : 0,
                         visibility: !!error ? 'visible' : 'hidden',
                         height: !!error ? 80 : 0,
@@ -120,27 +115,14 @@ const LoginContainer = () => {
                             color={'primary'}
                             className={classes.submit}
                         >
-                            Sign In
+                            Verify email
                         </Button>
                     </div>
-                    <Grid container>
-                        <Grid item xs={12}>
-                            <div style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'center'
-                            }}>
-                                <Link to={'/register'}>
-                                    Don't have an account? Sign Up
-                                </Link>
-                            </div>
-                        </Grid>
-                    </Grid>
                 </form>
             </Paper>
         </div>
     )
-};
+}
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -163,4 +145,4 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default LoginContainer;
+export default VerificationContainer;

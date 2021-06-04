@@ -1,4 +1,5 @@
 import {LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE, LOG_OUT} from './types/loginActions';
+import {NOT_VERIFIED} from './types/verificationActionsTypes';
 import axios from "axios";
 
 const {
@@ -12,23 +13,27 @@ export const logIn = (loginRequest) => (dispatch, getState) => {
         password
     } = loginRequest;
 
-
     axios.post(`${REACT_APP_BACKEND_URL}/auth/login`, {
         username: username,
         password: password
     }).then(({data}) => {
-        dispatch({
-            type: LOG_IN_SUCCESS,
-            payload: data
-        });
+        if(data.token) {
+            dispatch({
+                type: LOG_IN_SUCCESS,
+                payload: data
+            });
+        } else {
+            dispatch({
+                type: NOT_VERIFIED,
+                payload: data
+            });
+        }
     }).catch(e => {
         dispatch({
             type: LOG_IN_FAILURE,
-            payload: e
+            payload: new Error(e.response.data.message || "Error")
         })
     })
-
-
 };
 
 export const logOut = () => (dispatch, getState) => {

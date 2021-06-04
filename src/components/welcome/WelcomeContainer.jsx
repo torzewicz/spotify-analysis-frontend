@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import {useHistory, useLocation} from 'react-router-dom';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
+import {logIn, verified} from '../../redux/actions/logInActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TrackComponent from '../analysis/tracks/TrackComponent';
 import {connectSpotifyAction, fetchUserAction} from "../../redux/actions/userActions";
