@@ -53,7 +53,23 @@ const UserList = () => {
     }, [accessToken])
 
     const onDeleteButtonClicked = (user) => {
-        console.log("delete: " + user.id)
+        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/user`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+            params: {
+                username: user.username
+            }
+        })
+        .then(() => {
+            const newUsersData = usersData.map(value => value);
+            const index = newUsersData.findIndex(value => value.id === user.id);
+            newUsersData[index].enabled = false;
+            setUsersData(newUsersData)
+        })
+        .catch(err => {
+            setError(err);
+        })
     }
 
     return (
@@ -94,7 +110,13 @@ const UserList = () => {
                                     <TableCell>{Boolean(user.verified).toString()}</TableCell>
                                     <TableCell>{Boolean(user.enabled).toString()}</TableCell>
                                     <TableCell style={{display: 'flex', justifyContent: 'center'}}>
-                                        <IconButton size='small' onClick={() => onDeleteButtonClicked(user)} style={{color: 'red'}}><ClearIcon/></IconButton>
+                                        <IconButton 
+                                            disabled={!user.enabled}
+                                            size='small' 
+                                            onClick={() => onDeleteButtonClicked(user)}
+                                            style={{color: user.enabled ? 'red' : 'gray'}}>
+                                            <ClearIcon/>
+                                        </IconButton>
                                     </TableCell>
                                 </TableRow>
                             ))}
