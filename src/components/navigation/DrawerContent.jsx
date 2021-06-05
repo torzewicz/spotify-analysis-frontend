@@ -12,6 +12,7 @@ import packageJson from '../../../package.json';
 import {logOut} from "../../redux/actions/logInActions";
 import {fetchUserAction} from "../../redux/actions/userActions";
 import NavigationList from "./NavigationList";
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 const DrawerContent = props => {
 
@@ -33,8 +34,6 @@ const DrawerContent = props => {
         history.push("/login")
     };
 
-
-
     useEffect(() => {
         if (!user) {
             dispatch(fetchUserAction())
@@ -42,7 +41,8 @@ const DrawerContent = props => {
     }, []);
 
     const {
-        connectedToSpotify
+        connectedToSpotify,
+        role
     } = user || {};
 
     const menuItems = useMemo(() => [
@@ -52,6 +52,12 @@ const DrawerContent = props => {
             path: '/analysis',
             visible: isAuthenticated && connectedToSpotify
         },
+        {
+            name: "Admin",
+            icon: <SupervisorAccountIcon/>,
+            path: `/admin`,
+            visible: isAuthenticated && role === "ADMIN"
+        }
     ], [isAuthenticated, user]);
 
 
