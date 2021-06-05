@@ -8,6 +8,7 @@ import WelcomeContainer from '../components/welcome/WelcomeContainer';
 import LoginContainer from '../components/login/LoginContainer';
 import RegisterContainer from '../components/login/RegisterContainer';
 import VerificationContainer from '../components/login/VerificationContainer';
+import UserList from '../components/admin/userList/UserList'
 
 const MainNavigation = () => {
     const classes = useStyles();
@@ -28,6 +29,9 @@ const MainNavigation = () => {
                 </Route>
                 <PrivateRoute path={'/analysis'}>
                     <SwitchComponent/>
+                </PrivateRoute>
+                <PrivateRoute path={'/admin'}>
+                    <UserList/>
                 </PrivateRoute>
                 <Route path={'/'}>
                     <WelcomeContainer/>

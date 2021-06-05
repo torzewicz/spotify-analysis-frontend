@@ -12,6 +12,7 @@ import packageJson from '../../../package.json';
 import {logOut} from "../../redux/actions/logInActions";
 import {fetchUserAction} from "../../redux/actions/userActions";
 import NavigationList from "./NavigationList";
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 const DrawerContent = props => {
 
@@ -52,6 +53,12 @@ const DrawerContent = props => {
             path: '/analysis',
             visible: isAuthenticated && connectedToSpotify
         },
+        {
+            name: "Admin",
+            icon: <SupervisorAccountIcon/>,
+            path: `/admin`,
+            visible: isAuthenticated
+        }
     ], [isAuthenticated, user]);
 
 
