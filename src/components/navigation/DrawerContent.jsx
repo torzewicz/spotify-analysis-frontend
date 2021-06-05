@@ -34,8 +34,6 @@ const DrawerContent = props => {
         history.push("/login")
     };
 
-
-
     useEffect(() => {
         if (!user) {
             dispatch(fetchUserAction())
@@ -43,7 +41,8 @@ const DrawerContent = props => {
     }, []);
 
     const {
-        connectedToSpotify
+        connectedToSpotify,
+        role
     } = user || {};
 
     const menuItems = useMemo(() => [
@@ -57,7 +56,7 @@ const DrawerContent = props => {
             name: "Admin",
             icon: <SupervisorAccountIcon/>,
             path: `/admin`,
-            visible: isAuthenticated
+            visible: isAuthenticated && role === "ADMIN"
         }
     ], [isAuthenticated, user]);
 
