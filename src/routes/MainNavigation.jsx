@@ -25,11 +25,15 @@ const MainNavigation = () => {
                     <RegisterContainer/>
                 </Route>
                 <Route path='/verification'>
-                    <VerificationContainer></VerificationContainer>
+                    <VerificationContainer/>
                 </Route>
+                <PrivateRoute path={'/analysis/:accountName'}>
+                    <SwitchComponent/>
+                </PrivateRoute>
                 <PrivateRoute path={'/analysis'}>
                     <SwitchComponent/>
                 </PrivateRoute>
+
                 <PrivateRoute path={'/admin'}>
                     <UserList/>
                 </PrivateRoute>

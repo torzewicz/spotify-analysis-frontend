@@ -3,6 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import FilterTopListComponent from '../generic/FilterTopListComponent';
 import TrackComponent from './TrackComponent';
 import Grid from "@material-ui/core/Grid";
+import ErrorAlert from "../generic/feedback/alerts/ErrorAlert";
 
 
 const TracksAnalysisView = props => {
@@ -13,7 +14,8 @@ const TracksAnalysisView = props => {
         timeRange,
         setTimeRange,
         limit,
-        setLimit
+        setLimit,
+        accountName
     } = props;
 
     const classes = useStyles();
@@ -23,13 +25,15 @@ const TracksAnalysisView = props => {
         <div style={{display: 'flex', flexDirection: 'column'}}>
 
             <FilterTopListComponent
-                title={'Your favourite tracks'}
+                title={!!accountName ? `${accountName} favourite tracks` : 'Your favourite tracks'}
                 limit={limit}
                 setLimit={setLimit}
                 timeRange={timeRange}
                 setTimeRange={setTimeRange}
                 loading={loading}
             />
+            <ErrorAlert error={error}/>
+
 
             <div>
 

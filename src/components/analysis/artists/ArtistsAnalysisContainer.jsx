@@ -3,7 +3,7 @@ import ArtistsAnalysisView from './ArtistsAnalysisView';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 
-const ArtistsAnalysisContainer = () => {
+const ArtistsAnalysisContainer = ({accountName}) => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -14,26 +14,49 @@ const ArtistsAnalysisContainer = () => {
 
     const {accessToken} = useSelector(state => state.logIn);
 
+    console.log('accountName', accountName)
+
     const fetchArtists = () => {
         setLoading(true);
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/top/artists`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-            params: {
-                timeRange: timeRange.toUpperCase(),
-                limit: limit
-            }
-        })
-            .then(({data}) => {
-                setArtistsData(data);
+        if (!!accountName) {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/admin/top/artists/${accountName}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                params: {
+                    timeRange: timeRange.toUpperCase(),
+                    limit: limit
+                }
             })
-            .catch(err => {
-                setError(err);
+                .then(({data}) => {
+                    setArtistsData(data);
+                })
+                .catch(err => {
+                    setError(err);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        } else {
+            axios.get(`${process.env.REACT_APP_BACKEND_URL}/top/artists`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                params: {
+                    timeRange: timeRange.toUpperCase(),
+                    limit: limit
+                }
             })
-            .finally(() => {
-                setLoading(false);
-            });
+                .then(({data}) => {
+                    setArtistsData(data);
+                })
+                .catch(err => {
+                    setError(err);
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
     };
 
     useEffect(() => {
@@ -45,6 +68,7 @@ const ArtistsAnalysisContainer = () => {
 
     return (
         <ArtistsAnalysisView
+            accountName={accountName}
             loading={loading}
             error={error}
             artistsData={artistsData}

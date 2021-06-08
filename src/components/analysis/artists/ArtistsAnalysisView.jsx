@@ -10,6 +10,7 @@ import StarIcon from "@material-ui/icons/Stars";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import PeopleIcon from '@material-ui/icons/People';
 import AlbumIcon from '@material-ui/icons/Album';
+import ErrorAlert from "../generic/feedback/alerts/ErrorAlert";
 
 
 const ArtistsAnalysisView = props => {
@@ -21,6 +22,7 @@ const ArtistsAnalysisView = props => {
         setTimeRange,
         limit,
         setLimit,
+        accountName
     } = props;
 
     const classes = useStyles();
@@ -150,13 +152,14 @@ const ArtistsAnalysisView = props => {
     return (
         <div>
             <FilterTopListComponent
-                title={'Your favourite artists'}
+                title={!!accountName ? `${accountName} favourite artists` : 'Your favourite artists'}
                 limit={limit}
                 setLimit={setLimit}
                 timeRange={timeRange}
                 setTimeRange={setTimeRange}
                 loading={loading}
             />
+            <ErrorAlert error={error}/>
 
             <div>
                 <Grid container spacing={2}>
