@@ -5,7 +5,7 @@ import {
 } from "./types/loginActions";
 
 import {
-    ERROR_VERIFICATION, VERIFIED, VERIFY
+    ERROR_VERIFICATION, VERIFIED, VERIFY, CANCEL_VERIFICATION
 } from "./types/verificationActionsTypes";
 
 const {
@@ -39,4 +39,13 @@ export const relog = () => (dispatch, getState) => {
         dispatch({
             type: LOG_OUT,
         })
+};
+
+export const cancelVerification = () => (dispatch, getState) => {
+    dispatch({
+        type: CANCEL_VERIFICATION,
+    })
+    dispatch({
+        type: LOG_OUT,
+    })
 };

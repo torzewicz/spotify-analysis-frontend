@@ -1,5 +1,5 @@
-import { FormatColorResetSharp } from '@material-ui/icons';
 import {
+    CANCEL_VERIFICATION,
     ERROR_VERIFICATION,
     NOT_VERIFIED,
     VERIFIED,
@@ -46,6 +46,14 @@ const verificationReducer = (state = initialState, action) => {
                 logged: true,
                 verified: false,
                 error: action.payload
+            };
+        case CANCEL_VERIFICATION:
+            return {
+                ...state,
+                loading: false,
+                logged: false,
+                verified: false,
+                error: null
             };
         default:
             return state;
