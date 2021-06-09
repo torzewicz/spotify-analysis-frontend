@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {LinearProgress, Paper} from "@material-ui/core";
 import {useHistory} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {verifyAction, relog} from '../../redux/actions/verificationActions';
+import {verifyAction, relog, cancelVerification} from '../../redux/actions/verificationActions';
 import ValidatedTextInputField from "../analysis/generic/inputs/ValidatedTextInputField";
 import useFieldValidation from "../../utlis/FieldValidation";
 import ErrorAlert from "../analysis/generic/feedback/alerts/ErrorAlert";
@@ -33,6 +33,7 @@ const VerificationContainer =() => {
         error,
         verified,
         loading,
+        logged
     } = verificationState;
 
     const verify = () => {
@@ -66,6 +67,12 @@ const VerificationContainer =() => {
             codeField.setValue('');
         }
     }, [error]);
+
+    useEffect(() => {
+        if (!verified && !!logged) {
+            dispatch(cancelVerification())
+        }
+    }, [logged]);
 
     const classes = useStyles();
     return (

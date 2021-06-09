@@ -3,8 +3,10 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import {useHistory} from 'react-router-dom';
 import AssessmentIcon from '@material-ui/icons/Assessment';
+import HomeIcon from '@material-ui/icons/Home';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import CreateIcon from '@material-ui/icons/Create';
 import {useDispatch, useSelector} from 'react-redux';
 import {ListItem, ListItemIcon, ListItemText} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
@@ -47,6 +49,12 @@ const DrawerContent = props => {
 
     const menuItems = useMemo(() => [
         {
+            name: 'Home',
+            icon: <HomeIcon/>,
+            path: '/',
+            visible: isAuthenticated && connectedToSpotify
+        },
+        {
             name: 'Analysis',
             icon: <AssessmentIcon/>,
             path: '/analysis',
@@ -85,6 +93,10 @@ const DrawerContent = props => {
                     <ListItem button onClick={() => history.push("/login")}>
                         <ListItemIcon>{<VpnKeyIcon/>}</ListItemIcon>
                         <ListItemText primary={'Login'}/>
+                    </ListItem>
+                    <ListItem button onClick={() => history.push("/register")}>
+                        <ListItemIcon>{<CreateIcon/>}</ListItemIcon>
+                        <ListItemText primary={'Sign Up'}/>
                     </ListItem>
                 </List>}
             <div style={{
