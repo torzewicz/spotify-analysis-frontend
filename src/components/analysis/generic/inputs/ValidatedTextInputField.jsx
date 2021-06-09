@@ -15,13 +15,14 @@ const ValidatedTextInputField = (props) => {
             handleChange = () => null,
             disabled
         },
-        isPassword
+        isPassword,
+        ...rest
     } = props;
 
     return (
         <div className={styles.root}>
             <TextField
-                {...props}
+                {...rest}
                 value={value}
                 type={!!isPassword ? 'password' : 'text'}
                 error={!!error}

@@ -14,8 +14,6 @@ const ArtistsAnalysisContainer = ({accountName}) => {
 
     const {accessToken} = useSelector(state => state.logIn);
 
-    console.log('accountName', accountName)
-
     const fetchArtists = () => {
         setLoading(true);
         if (!!accountName) {
